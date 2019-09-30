@@ -1,4 +1,4 @@
-class PlayerPhysics < Component
+class CharacterPhysics < Component
   attr_accessor :speed, :in_collision, :collides_with
 
   def initialize(game_object, object_pool)
@@ -45,8 +45,14 @@ class PlayerPhysics < Component
   end
 
   def box
-    w = box_width / 2 - 1
-    h = box_height / 2 - 1
+    w = box_width / 2 - 10
+    h = box_height / 2 - 8
+    Utils.rotate(object.direction, x, y,
+                 x + w,      y + h,
+                 x - w,      y + h,
+                 x - w,      y - h,
+                 x + w,      y - h,
+                )
   end
 
   def update
@@ -76,5 +82,27 @@ class PlayerPhysics < Component
         @in_collision = true
       end
     end
+  end
+
+  private
+
+  def collides_with_poly?(poly)
+    if poly
+      if poly.size == 2
+        px, py = poly
+        return Utils.point_in_poly(px, py, *box)
+      end
+      poly.each_slice(2) do |x, y|
+        return true if Utils.point_in_poly(x, y, *box)
+      end
+      box.each_slice(2) do |x, y|
+        return true if Utils.point_in_poly(x, y, *poly)
+      end
+    end
+    false
+  end
+
+  def collides_with_point?(x, y)
+    Utils.point_in_poly(x, y, box)
   end
 end

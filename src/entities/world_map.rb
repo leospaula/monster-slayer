@@ -5,9 +5,12 @@ class WorldMap
   MAP_HEIGHT = 30
   TILE_SIZE = 64
 
-  def initialize
+  def initialize(object_pool)
     load_tiles
+    @object_pool = object_pool
+    object_pool.map = self
     @map = generate_map
+    generate_trees
   end
 
   def find_spawn_point
@@ -92,6 +95,24 @@ class WorldMap
       @sand
     else
       @grass
+    end
+  end
+
+  def generate_trees
+    noises = Perlin::Noise.new(2)
+    contrast = Perlin::Curve.contrast(
+      Perlin::Curve::CUBIC, 2)
+    trees = 0
+    target_trees = rand(200..300)
+    while trees < target_trees do
+      x = rand(0..MAP_WIDTH * TILE_SIZE)
+      y = rand(0..MAP_HEIGHT * TILE_SIZE)
+      n = noises[x * 0.001, y * 0.001]
+      n = contrast.call(n)
+      if tile_at(x, y) == @grass && n > 0.5
+        Tree.new(@object_pool, x, y, n * 2 - 1)
+        trees += 1
+      end
     end
   end
 end

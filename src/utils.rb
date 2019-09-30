@@ -27,6 +27,18 @@ module Utils
     Math.sqrt(dx * dx + dy * dy)
   end
 
+  def self.rotate(angle, around_x, around_y, *points)
+    result = []
+    angle = {right: 0, up: 90, left: 180, down: 270}[angle]
+    points.each_slice(2) do |x, y|
+      r_x = Math.cos(angle) * (around_x - x) - Math.sin(angle) * (around_y - y) + around_x
+      r_y = Math.sin(angle) * (around_x - x) + Math.cos(angle) * (around_y - y) + around_y
+      result << r_x
+      result << r_y
+    end
+    result
+  end
+
   # http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
   def self.point_in_poly(testx, testy, *poly)
     nvert = poly.size / 2 # Number of vertices in poly

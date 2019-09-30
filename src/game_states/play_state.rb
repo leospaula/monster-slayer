@@ -2,11 +2,16 @@ class PlayState < GameState
   attr_accessor :update_interval
 
   def initialize
-    @map = WorldMap.new
+    @object_pool = ObjectPool.new
+    @map = WorldMap.new(@object_pool)
     @camera = Camera.new
-    @object_pool = ObjectPool.new(@map)
     @player = Player.new(@object_pool, PlayerInput.new(@camera))
     @camera.target = @player
+    @object_pool.camera = @camera
+
+    30.times do |i|
+      Monster.new(@object_pool)
+    end
   end
 
   def update

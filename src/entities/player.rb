@@ -20,6 +20,11 @@ class Player < GameObject
 
   def attack!
     @attack = true
+    @object_pool.nearby(self, 50).each do |obj|
+      next if obj == self
+      obj.health.inflict_damage(1)
+      return
+    end
   end
 
   def stop

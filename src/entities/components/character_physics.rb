@@ -45,8 +45,8 @@ class CharacterPhysics < Component
   end
 
   def box
-    w = box_width / 2 - 10
-    h = box_height / 2 - 8
+    w = box_width / 2 - 12
+    h = box_height / 2 - 10
     Utils.rotate(object.direction, x, y,
                  x + w,      y + h,
                  x - w,      y + h,

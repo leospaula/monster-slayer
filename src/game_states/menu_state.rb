@@ -44,5 +44,12 @@ class MenuState < GameState
 
   def button_down(id)
     $window.close if id == Gosu::KbQ
+    if id == Gosu::KbC && @play_state
+      GameState.switch(@play_state)
+    end
+    if id == Gosu::KbN
+      @play_state = PlayState.new
+      GameState.switch(@play_state)
+    end
   end
 end

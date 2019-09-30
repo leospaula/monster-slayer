@@ -29,7 +29,7 @@ module Utils
 
   def self.rotate(angle, around_x, around_y, *points)
     result = []
-    angle = {right: 0, up: 90, left: 180, down: 270}[angle]
+    angle = Utils.direction_angle(angle)
     points.each_slice(2) do |x, y|
       r_x = Math.cos(angle) * (around_x - x) - Math.sin(angle) * (around_y - y) + around_x
       r_y = Math.sin(angle) * (around_x - x) + Math.cos(angle) * (around_y - y) + around_y
@@ -59,5 +59,9 @@ module Utils
       j = i
     end
     inside
+  end
+
+  def self.direction_angle(direction)
+    { right: 0, up: 90, left: 180, down: 270 }.fetch(angle) rescue 0
   end
 end

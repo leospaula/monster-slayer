@@ -4,21 +4,34 @@ class MonsterGraphics < Component
   def initialize(game_object, monster_kind)
     super(game_object)
     @walking = build_walking(monster_kind)
+    @dead = Gosu::Image.new(Utils.media_path('bone.png'))
   end
 
   def draw(viewport)
-    @walking.draw(object.direction, x, y, animate: !object.stopped)
+    if object && object.health.dead?
+      @dead.draw_rot(x, y, 1, Utils.direction_angle(object.direction))
+    else
+      @walking.draw(object.direction, x, y, animate: !object.stopped)
+    end
   end
 
   def width
-    @walking.width
+    body.width
   end
 
   def height
-    @walking.height
+    body.height
   end
 
   private
+
+  def body
+    if object && object.health.dead?
+      @dead
+    else
+      @walking
+    end
+  end
 
   def build_walking(kind)
     if kind == :imp

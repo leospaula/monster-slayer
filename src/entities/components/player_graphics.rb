@@ -5,10 +5,13 @@ class PlayerGraphics < Component
     super(game_object)
     @walking = build_walking
     @attack_down = build_attack_down
+    @dead = Gosu::Image.new(Utils.media_path('player_corpse.png'))
   end
 
   def draw(viewport)
-    if object.attack
+    if object && object.health.dead?
+      @dead.draw_rot(x, y, 1, Utils.direction_angle(object.direction))
+    elsif object.attack
       @attack_down.draw(object.direction, x, y)
       object.attack = @attack_down.in_progress?
     else
@@ -27,7 +30,9 @@ class PlayerGraphics < Component
   private
 
   def body
-    if object.attack
+    if object && object.health.dead?
+      @dead
+    elsif object.attack
       @walking
     else
       @attack_down

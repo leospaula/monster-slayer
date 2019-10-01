@@ -11,6 +11,7 @@ require_pattern = File.join(root_dir, '**/*.rb')
 
 Dir.glob(require_pattern).each do |f|
   next if f.end_with?('/main.rb')
+  next if f.include?('db')
   begin
     require_relative f.gsub("#{root_dir}/", '')
   rescue

@@ -45,8 +45,8 @@ class CharacterPhysics < Component
   end
 
   def box
-    w = box_width / 2 - 12
-    h = box_height / 2 - 10
+    w = box_width / 2 - 13
+    h = box_height / 2 - 15
     Utils.rotate(object.direction, x, y,
                  x + w,      y + h,
                  x - w,      y + h,
@@ -78,6 +78,7 @@ class CharacterPhysics < Component
         object.x, object.y = new_x, new_y
         @in_collision = false
       else
+        object.on_collision(@collides_with)
         @speed = 0
         @in_collision = true
       end

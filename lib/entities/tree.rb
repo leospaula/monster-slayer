@@ -9,10 +9,6 @@ class Tree < GameObject
     @angle = rand(-15..15)
   end
 
-  def on_collision(object)
-    @graphics.shake(object.direction)
-  end
-
   def box
     [x, y]
   end

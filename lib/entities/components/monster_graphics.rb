@@ -9,7 +9,10 @@ class MonsterGraphics < Component
 
   def draw(viewport)
     if object && object.health.dead?
-      @dead.draw_rot(x, y, 1, Utils.direction_angle(object.direction))
+      @dead.draw_rot(
+        x, y, 1,
+        Utils.direction_angle(object.direction),
+        0.5, 0.5, 0.5, 0.5)
     else
       @walking.draw(object.direction, x, y, animate: !object.stopped)
     end

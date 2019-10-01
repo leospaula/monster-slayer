@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_01_003942) do
+ActiveRecord::Schema.define(version: 2019_10_01_192648) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,14 @@ ActiveRecord::Schema.define(version: 2019_10_01_003942) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "goals", force: :cascade do |t|
+    t.integer "trophy_id"
+    t.string "description"
+    t.string "category"
+    t.bigint "value"
+    t.index ["trophy_id"], name: "index_goals_on_trophy_id"
+  end
+
   create_table "killed_monsters", force: :cascade do |t|
     t.integer "user_id"
     t.integer "monster_id"
@@ -33,6 +41,18 @@ ActiveRecord::Schema.define(version: 2019_10_01_003942) do
 
   create_table "monsters", force: :cascade do |t|
     t.string "name"
+  end
+
+  create_table "rewards", force: :cascade do |t|
+    t.integer "goal_id"
+    t.integer "user_id"
+    t.index ["goal_id"], name: "index_rewards_on_goal_id"
+    t.index ["user_id"], name: "index_rewards_on_user_id"
+  end
+
+  create_table "trophies", force: :cascade do |t|
+    t.string "name"
+    t.string "image"
   end
 
   create_table "users", force: :cascade do |t|

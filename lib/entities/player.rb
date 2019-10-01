@@ -9,11 +9,11 @@ class Player < GameObject
     @attack = false
     @direction = :down
     @stopped = true
-    @coins = 0
+    @model = Model::User.first_or_create
+    @coins = @model.collected_coins.sum(&:value)
     @physics = CharacterPhysics.new(self, object_pool)
     @graphics = PlayerGraphics.new(self)
     @health = PlayerHealth.new(self, object_pool)
-    @model = Model::User.first_or_create
   end
 
   def move

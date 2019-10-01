@@ -22,11 +22,11 @@ class Health < Component
     update_image
   end
 
-  def inflict_damage(amount)
+  def inflict_damage(player, amount)
     if @health > 0
       @health_updated = true
       @health = [@health - amount.to_i, 0].max
-      after_death if dead?
+      after_death(player) if dead?
     end
   end
 
@@ -52,6 +52,14 @@ class Health < Component
     end
   end
 
-  def after_death
+  def after_death(player)
+    if object.class == Monster
+      Model::KilledMonster.create(
+        user_id: player.model.id,
+        monster_id: object.model.id
+      )
+
+      Coin.new(@object_pool, x, y)
+    end
   end
 end

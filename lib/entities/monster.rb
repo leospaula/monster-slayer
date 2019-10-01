@@ -1,5 +1,6 @@
 class Monster < GameObject
-  attr_accessor :x, :y, :direction, :stopped, :physics, :graphics, :health
+  attr_accessor :x, :y, :direction, :stopped, :physics, :graphics,
+                :health, :model, :input
 
   def initialize(object_pool, input=AiInput.new)
     super(object_pool)
@@ -11,6 +12,7 @@ class Monster < GameObject
     @physics = CharacterPhysics.new(self, object_pool)
     @graphics = MonsterGraphics.new(self, @kind)
     @health = MonsterHealth.new(self, object_pool, monster_health)
+    @model = monster_models.fetch(@kind)
   end
 
   def move
@@ -22,6 +24,7 @@ class Monster < GameObject
   end
 
   def box
+    return [0, 0] if health.dead?
     @physics.box
   end
 
@@ -32,6 +35,15 @@ class Monster < GameObject
       20
     else
       50
+    end
+  end
+
+  def monster_models
+    @monster_models ||= begin
+      {
+        imp: Model::Monster.find_by(name: 'Imp'),
+        winged_imp: Model::Monster.find_by(name: 'Winged Imp')
+      }
     end
   end
 end

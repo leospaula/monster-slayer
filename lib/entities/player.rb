@@ -1,6 +1,6 @@
 class Player < GameObject
   attr_accessor :x, :y, :attack, :direction, :stopped,
-                :physics, :graphics, :health
+                :physics, :graphics, :health, :model, :coins
 
   def initialize(object_pool, input)
     super(object_pool)
@@ -9,9 +9,11 @@ class Player < GameObject
     @attack = false
     @direction = :down
     @stopped = true
+    @coins = 0
     @physics = CharacterPhysics.new(self, object_pool)
     @graphics = PlayerGraphics.new(self)
     @health = PlayerHealth.new(self, object_pool)
+    @model = Model::User.first_or_create
   end
 
   def move
@@ -22,7 +24,7 @@ class Player < GameObject
     @attack = true
     @object_pool.nearby(self, 50).each do |obj|
       next if obj == self
-      obj.health.inflict_damage(1)
+      obj.health.inflict_damage(self, 1)
       return
     end
   end

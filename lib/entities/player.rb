@@ -1,19 +1,19 @@
 class Player < GameObject
-  attr_accessor :x, :y, :attack, :direction, :stopped,
+  attr_accessor :x, :y, :attack, :direction, :stopped, :input,
                 :physics, :graphics, :health, :model, :coins
 
   def initialize(object_pool, input)
     super(object_pool)
+    @model = Model::User.first_or_create
+    @physics = CharacterPhysics.new(self, object_pool)
+    @graphics = PlayerGraphics.new(self)
+    @health = PlayerHealth.new(self, object_pool)
     @input = input
     @input.control(self)
     @attack = false
     @direction = :down
     @stopped = true
-    @model = Model::User.first_or_create
     @coins = @model.collected_coins.sum(&:value)
-    @physics = CharacterPhysics.new(self, object_pool)
-    @graphics = PlayerGraphics.new(self)
-    @health = PlayerHealth.new(self, object_pool)
   end
 
   def move

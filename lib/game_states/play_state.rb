@@ -1,5 +1,5 @@
 class PlayState < GameState
-  attr_accessor :update_interval
+  attr_accessor :update_interval, :object_pool
 
   def initialize
     @object_pool = ObjectPool.new
@@ -42,7 +42,12 @@ class PlayState < GameState
       $window.close
     end
     if id == Gosu::KbEscape
-      GameState.switch(MenuState.instance)
+      pause = PauseState.instance
+      pause.play_state = self
+      GameState.switch(pause)
+    end
+    if id == Gosu::KbT
+      Monster.new(@object_pool)
     end
   end
 
